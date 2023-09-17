@@ -15,7 +15,7 @@ var (
 	Commit     string
 	BuildTime  string
 	Site       string
-	TimeZone   = time.FixedZone("UTC-4", -4*60*60)
+	TimeZone   = time.FixedZone("UTC+9", 9*60*60)
 	ServerName string
 	// LogMode 允許參數 debug, info, warn, error, dpanic, panic, fatal
 	LogMode string
