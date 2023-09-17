@@ -30,4 +30,6 @@ func loadEnv() {
 	flag.StringVar(&Port, "p", "1324", "Server Port")
 	flag.StringVar(&Host, "b", "0.0.0.0", "Server Host")
 	flag.Parse()
+
+	time.Local = TimeZone
 }
