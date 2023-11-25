@@ -1,5 +1,5 @@
 // See https://blog.twitter.com/engineering/en_us/a/2010/announcing-snowflake for more information.
-package middleware
+package utils
 
 import (
 	"fmt"
@@ -15,7 +15,7 @@ var (
 )
 
 // snowflaker
-func generateRequestID() string {
+func GenerateSnowflakeID() string {
 	/*
 		Unix timestamp_PID_seq		1545112028_12345_12345
 									15451120281234512345

@@ -16,21 +16,20 @@ var (
 //
 // example:
 //
-// type Sample struct {
-// 		ID       string    `bson:"-"`
-// 		Title    string    `bson:"title,omitempty"`
-// 		ExpireAt time.Time `bson:"expireAt,omitempty"`
-// }
+//	type Sample struct {
+//			ID       string    `bson:"-"`
+//			Title    string    `bson:"title,omitempty"`
+//			ExpireAt time.Time `bson:"expireAt,omitempty"`
+//	}
 //
-// s := Sample{
-//	ExpireAt: time.Now()
-// }
+//	s := Sample{
+//		ExpireAt: time.Now()
+//	}
 //
 // m, _ := ToDoc(s)
 //
 // // m = &map[expireAt:1641516571365]
 // fmt.Println(m)
-//
 func ToDoc(v interface{}) (doc *bson.M, err error) {
 	data, err := bson.Marshal(v)
 	if err != nil {

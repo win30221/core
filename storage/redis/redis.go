@@ -1,6 +1,6 @@
 /*
-	pacakge redis 包裝了 http server 中常用的方法，你可以用注入 redis pool 的方式來使用這些方法，
-	使用注入而不包成 struct 的原因是為了保留操作上的彈性，以免增加少數特例條件時還要來 core 新增方法。
+pacakge redis 包裝了 http server 中常用的方法，你可以用注入 redis pool 的方式來使用這些方法，
+使用注入而不包成 struct 的原因是為了保留操作上的彈性，以免增加少數特例條件時還要來 core 新增方法。
 */
 package redis
 

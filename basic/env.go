@@ -2,6 +2,7 @@ package basic
 
 import (
 	"flag"
+	"log"
 	"time"
 )
 
@@ -15,7 +16,8 @@ var (
 	Commit     string
 	BuildTime  string
 	Site       string
-	TimeZone   = time.FixedZone("UTC+9", 9*60*60)
+	Location   string
+	TimeZone   *time.Location
 	ServerName string
 	// LogMode 允許參數 debug, info, warn, error, dpanic, panic, fatal
 	LogMode string
@@ -27,9 +29,16 @@ var (
 
 func loadEnv() {
 	flag.StringVar(&ConsulIP, "c", "127.0.0.1", "Consul IP")
+	flag.StringVar(&Host, "h", "0.0.0.0", "Server Host")
 	flag.StringVar(&Port, "p", "1324", "Server Port")
-	flag.StringVar(&Host, "b", "0.0.0.0", "Server Host")
+	flag.StringVar(&Location, "l", "Asia/Taipei", "Time zone")
 	flag.Parse()
 
-	time.Local = TimeZone
+	timeZone, err := time.LoadLocation(Location)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	TimeZone = timeZone
+	time.Local = timeZone
 }

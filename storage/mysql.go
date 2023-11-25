@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/go-sql-driver/mysql"
+	"github.com/win30221/core/basic"
 	"github.com/win30221/core/config"
 )
 
@@ -29,7 +30,7 @@ func GetMysqlDB(path string) (db *sql.DB) {
 	conf.User, _ = config.GetString(path+"/account", true)
 	conf.Passwd, _ = config.GetString(path+"/password", true)
 	conf.DBName, _ = config.GetString(path+"/dbname", true)
-	conf.Params = map[string]string{"parseTime": "true", "loc": "Asia/Tokyo"}
+	conf.Params = map[string]string{"parseTime": "true", "loc": basic.Location}
 
 	db, err = sql.Open("mysql", conf.FormatDSN())
 	if err != nil {

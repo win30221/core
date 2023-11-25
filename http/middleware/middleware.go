@@ -12,6 +12,10 @@ import (
 	"go.uber.org/zap"
 )
 
+const (
+	SQLLogs = "sqlLogs"
+)
+
 func Log() []gin.HandlerFunc {
 	return []gin.HandlerFunc{
 		RequestIDMiddleware,
@@ -21,6 +25,7 @@ func Log() []gin.HandlerFunc {
 
 func ginLogger() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		c.Set(SQLLogs, []string{})
 		reckon := time.Now()
 		c.Next()
 
@@ -60,10 +65,12 @@ func excludePath(path string) bool {
 
 // basicFields 記錄一些必要的資訊
 func basicFields(c *gin.Context, reckon time.Time) []zap.Field {
+	sqlLogs, _ := c.Get(SQLLogs)
 	return []zap.Field{
 		zap.String("traceCode", c.Request.Header.Get(consts.HeaderXRequestID)),
 		zap.String("method", c.Request.Method),
 		zap.String("uri", c.Request.RequestURI),
+		zap.Any("sqlLogs", sqlLogs.([]string)),
 		zap.Int("status", c.Writer.Status()),
 		zap.String("remoteHost", c.Request.RemoteAddr),
 		zap.Duration("latency", time.Since(reckon)),
