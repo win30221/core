@@ -23,3 +23,10 @@ func New(c *gin.Context, ctx context.Context) Context {
 		TraceCode:  c.Request.Header.Get(consts.HeaderXRequestID),
 	}
 }
+
+func NewEmpty() Context {
+	return Context{
+		GinContext: &gin.Context{},
+		Context:    context.Background(),
+	}
+}
