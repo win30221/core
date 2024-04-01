@@ -20,6 +20,8 @@ type Config struct {
 	Region          string
 	AccessKeyID     string
 	SecretAccessKey string
+	Endpoint        string
+	ACL             string
 
 	// RootSubset 將 bucket 底下資源區隔為 dev, prd。(dev, qa, sit, pt 等站點 root_folder 都用 dev)
 	RootSubset string
@@ -34,8 +36,10 @@ type Storage struct {
 
 func New(conf Config) (s *Storage, err error) {
 	awsConfig := &aws.Config{
-		Region:      aws.String(conf.Region),
-		Credentials: credentials.NewStaticCredentials(conf.AccessKeyID, conf.SecretAccessKey, ""),
+		Region:           aws.String(conf.Region),
+		Credentials:      credentials.NewStaticCredentials(conf.AccessKeyID, conf.SecretAccessKey, ""),
+		Endpoint:         aws.String(conf.Endpoint),
+		S3ForcePathStyle: aws.Bool(true),
 	}
 
 	sess, err := session.NewSession(awsConfig)
@@ -66,6 +70,7 @@ func (s *Storage) UploadImage(ctx context.Context, dirPath, filename, contentTyp
 			Key:         aws.String(filePath),
 			ContentType: aws.String(contentType),
 			Body:        file,
+			ACL:         aws.String(s.conf.ACL),
 		},
 	)
 	if err != nil {

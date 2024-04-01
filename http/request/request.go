@@ -3,7 +3,6 @@ package request
 import (
 	"fmt"
 	"net/http"
-	"net/url"
 	"strings"
 
 	jsoniter "github.com/json-iterator/go"
@@ -18,7 +17,7 @@ var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 type Request struct {
 	URL    string
-	Query  url.Values
+	Data   string
 	Result interface{}
 	CTX    ctx.Context
 	// header
@@ -33,8 +32,8 @@ func GET(r *Request) (err error) {
 		return
 	}
 
-	if r.Query != nil {
-		req.URL.RawQuery = r.Query.Encode()
+	if r.Data != "" {
+		req.URL.RawQuery = r.Data
 	}
 
 	if r.Header != nil {
@@ -46,13 +45,15 @@ func GET(r *Request) (err error) {
 		req.Header.Add(consts.HeaderXRequestID, r.CTX.TraceCode)
 	}
 
-	req = req.WithContext(r.CTX.Context)
+	if r.CTX.Context != nil {
+		req = req.WithContext(r.CTX.Context)
+	}
 
 	return exec(req, r)
 }
 
 func POST(r *Request) (err error) {
-	req, err := http.NewRequest("POST", r.URL, strings.NewReader(r.Query.Encode()))
+	req, err := http.NewRequest("POST", r.URL, strings.NewReader(r.Data))
 	if err != nil {
 		err = catch.New(syserrno.HTTP, "new request error", fmt.Sprintf("new request error: %s", err.Error()))
 		return
@@ -68,13 +69,15 @@ func POST(r *Request) (err error) {
 		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	}
 
-	req = req.WithContext(r.CTX.Context)
+	if r.CTX.Context != nil {
+		req = req.WithContext(r.CTX.Context)
+	}
 
 	return exec(req, r)
 }
 
 func PUT(r *Request) (err error) {
-	req, err := http.NewRequest("PUT", r.URL, strings.NewReader(r.Query.Encode()))
+	req, err := http.NewRequest("PUT", r.URL, strings.NewReader(r.Data))
 	if err != nil {
 		err = catch.New(syserrno.HTTP, "new request error", fmt.Sprintf("new request error: %s", err.Error()))
 		return
@@ -90,13 +93,15 @@ func PUT(r *Request) (err error) {
 		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	}
 
-	req = req.WithContext(r.CTX.Context)
+	if r.CTX.Context != nil {
+		req = req.WithContext(r.CTX.Context)
+	}
 
 	return exec(req, r)
 }
 
 func PATCH(r *Request) (err error) {
-	req, err := http.NewRequest("PATCH", r.URL, strings.NewReader(r.Query.Encode()))
+	req, err := http.NewRequest("PATCH", r.URL, strings.NewReader(r.Data))
 	if err != nil {
 		err = catch.New(syserrno.HTTP, "new request error", fmt.Sprintf("new request error: %s", err.Error()))
 		return
@@ -112,7 +117,9 @@ func PATCH(r *Request) (err error) {
 		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	}
 
-	req = req.WithContext(r.CTX.Context)
+	if r.CTX.Context != nil {
+		req = req.WithContext(r.CTX.Context)
+	}
 
 	return exec(req, r)
 }
@@ -133,7 +140,7 @@ func exec(req *http.Request, r *Request) (err error) {
 			err = catch.New(
 				syserrno.HTTP,
 				fmt.Sprintf("call %s error: %s", r.URL, err.Error()),
-				fmt.Sprintf("call %s error, resp: %v, req: %+v, header: %+v, err: %s ", r.URL, r.Query, resp, r.Header, err.Error()),
+				fmt.Sprintf("call %s error, resp: %v, req: %+v, header: %+v, err: %s ", r.URL, r.Data, resp, r.Header, err.Error()),
 			)
 
 			return

@@ -66,11 +66,13 @@ func excludePath(path string) bool {
 // basicFields 記錄一些必要的資訊
 func basicFields(c *gin.Context, reckon time.Time) []zap.Field {
 	sqlLogs, _ := c.Get(SQLLogs)
+	result, _ := c.Get("result")
 	return []zap.Field{
 		zap.String("traceCode", c.Request.Header.Get(consts.HeaderXRequestID)),
 		zap.String("method", c.Request.Method),
 		zap.String("uri", c.Request.RequestURI),
-		zap.Any("sqlLogs", sqlLogs.([]string)),
+		zap.Any("sqlLogs", sqlLogs),
+		zap.Any("result", result),
 		zap.Int("status", c.Writer.Status()),
 		zap.String("remoteHost", c.Request.RemoteAddr),
 		zap.Duration("latency", time.Since(reckon)),

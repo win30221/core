@@ -110,6 +110,7 @@ func OK(ctx ctx.Context, data interface{}) {
 
 	if data != nil {
 		res.Data = data
+		ctx.GinContext.Set("result", data)
 	}
 
 	ctx.GinContext.JSON(http.StatusOK, res)

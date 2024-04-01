@@ -21,6 +21,7 @@ func GetRedis(path, dbName string) (rdb *redigo.Pool) {
 	// 先抓指定連線資訊
 	m, _ := config.GetStringMap(path+"/"+dbName, false)
 	host := m["host"]
+	password := m["password"]
 	maxIdle := cast.ToInt(m["max_idle"])
 	maxActive := cast.ToInt(m["max_active"])
 	idleTimeout, _ := time.ParseDuration(m["idle_timeout"])
@@ -28,6 +29,9 @@ func GetRedis(path, dbName string) (rdb *redigo.Pool) {
 	// 沒有設定再抓預設
 	if host == "" {
 		host, _ = config.GetString(path+"/host", true)
+	}
+	if password == "" {
+		password, _ = config.GetString(path+"/password", true)
 	}
 	if maxIdle == 0 {
 		maxIdle, _ = config.GetInt(path+"/max_idle", true)
@@ -50,6 +54,13 @@ func GetRedis(path, dbName string) (rdb *redigo.Pool) {
 			conn, err = redigo.Dial("tcp", host)
 			if err != nil {
 				return
+			}
+
+			if password != "" {
+				_, err = conn.Do("AUTH", password)
+				if err != nil {
+					return
+				}
 			}
 
 			_, err = conn.Do("SELECT", db)

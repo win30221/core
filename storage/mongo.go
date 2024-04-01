@@ -3,6 +3,7 @@ package storage
 import (
 	"context"
 	"log"
+	"net/url"
 	"strings"
 	"time"
 
@@ -27,7 +28,10 @@ func GetMongoDB(path string, rp *readpref.ReadPref) (db *mongo.Client) {
 	dbPassword, _ := config.GetString(path+"/password", true)
 	dbPoolSize, _ := config.GetInt(path+"/pool_size", true)
 
-	clientOptions := options.Client().ApplyURI("mongodb://" + dbAccount + ":" + dbPassword + "@" + hosts).SetMaxPoolSize(uint64(dbPoolSize))
+	encodedAccount := url.QueryEscape(dbAccount)
+	encodedPassword := url.QueryEscape(dbPassword)
+
+	clientOptions := options.Client().ApplyURI("mongodb://" + encodedAccount + ":" + encodedPassword + "@" + hosts).SetMaxPoolSize(uint64(dbPoolSize))
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 

@@ -20,6 +20,8 @@ func GetS3(path string) (s *s3.Storage) {
 	secretAccessKey, _ := config.GetString(path+"/secret_access_key", true)
 	bucket, _ := config.GetString(path+"/bucket", true)
 	region, _ := config.GetString(path+"/region", true)
+	endpoint, _ := config.GetString(path+"/endpoint", true)
+	acl, _ := config.GetString(path+"/acl", true)
 	rootSubset, _ := config.GetString(path+"/root_subset", true)
 	cdnURL, _ := config.GetString(path+"/cdn_url", true)
 
@@ -28,8 +30,11 @@ func GetS3(path string) (s *s3.Storage) {
 		Region:          region,
 		AccessKeyID:     accessKeyID,
 		SecretAccessKey: secretAccessKey,
-		RootSubset:      rootSubset,
-		CdnURL:          cdnURL,
+		Endpoint:        endpoint,
+		ACL:             acl,
+
+		RootSubset: rootSubset,
+		CdnURL:     cdnURL,
 	})
 
 	return
