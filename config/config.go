@@ -105,16 +105,17 @@ func Get(key string, existOnErr bool, convert func(interface{}) error) (err erro
 // GetString
 // 假設 consul 路徑 "/storage/redis" 內有下列資料
 // `
-// 	account = "hugo"
-// 	[dbname]
-// 	user = 2
+//
+//	account = "hugo"
+//	[dbname]
+//	user = 2
+//
 // `
 //
 // 使用 GetStringMap("/storage/redis/dbname.user)
 // return: "2"
 // 使用 GetStringMap("/storage/redis/account)
 // return: "hugo"
-//
 func GetString(key string, existOnErr bool) (result string, err error) {
 	err = Get(key, existOnErr, func(res interface{}) (err error) {
 		if _, ok := res.(string); !ok {
@@ -134,6 +135,18 @@ func GetInt(key string, existOnErr bool) (result int, err error) {
 			return
 		}
 		result = cast.ToInt(res)
+		return
+	})
+	return
+}
+
+func GetInt64(key string, existOnErr bool) (result int64, err error) {
+	err = Get(key, existOnErr, func(res interface{}) (err error) {
+		if _, ok := res.(int64); !ok {
+			err = ErrOnTypeIncorrect
+			return
+		}
+		result = cast.ToInt64(res)
 		return
 	})
 	return
@@ -166,13 +179,14 @@ func GetBool(key string, existOnErr bool) (result bool, err error) {
 // GetStringSlice
 // 假設 consul 路徑 "/storage/redis" 內有下列資料
 // `
-// 	host = ["127.0.0.1:8080", "127.0.0.1:8081", "127.0.0.1:8082"]
-// 	password = "b"
+//
+//	host = ["127.0.0.1:8080", "127.0.0.1:8081", "127.0.0.1:8082"]
+//	password = "b"
+//
 // `
 //
 // GetStringSlice("/storage/redis/host")
 // return: []string{"127.0.0.1:8080", "127.0.0.1:8081", "127.0.0.1:8082"}
-//
 func GetStringSlice(key string, existOnErr bool) (result []string, err error) {
 	err = Get(key, existOnErr, func(res interface{}) (err error) {
 		if _, ok := res.([]interface{}); !ok {
@@ -188,12 +202,13 @@ func GetStringSlice(key string, existOnErr bool) (result []string, err error) {
 // GetDuration
 // 假設 consul 路徑 "/storage/redis" 內有下列資料
 // `
-// 	user_ttl = "60s"
+//
+//	user_ttl = "60s"
+//
 // `
 //
 // GetDuration("/storage/redis/user_ttl")
 // return: time.Duration("60s")
-//
 func GetDuration(key string, existOnErr bool) (result time.Duration, err error) {
 	err = Get(key, existOnErr, func(res interface{}) (err error) {
 		if _, ok := res.(string); !ok {
@@ -212,12 +227,13 @@ func GetDuration(key string, existOnErr bool) (result time.Duration, err error) 
 // GetSeconds
 // 假設 consul 路徑 "/storage/redis" 內有下列資料
 // `
-// 	user_ttl = "2m"
+//
+//	user_ttl = "2m"
+//
 // `
 //
 // GetSeconds("/storage/redis/user_ttl")
 // return: 120
-//
 func GetSeconds(key string, existOnErr bool) (result int, err error) {
 	err = Get(key, existOnErr, func(res interface{}) (err error) {
 		if _, ok := res.(string); !ok {
@@ -242,12 +258,13 @@ func GetSeconds(key string, existOnErr bool) (result int, err error) {
 // GetMillisecond
 // 假設 consul 路徑 "/storage/redis" 內有下列資料
 // `
-// 	user_ttl = "1s"
+//
+//	user_ttl = "1s"
+//
 // `
 //
 // GetSeconds("/storage/redis/user_ttl")
 // return: 1000
-//
 func GetMillisecond(key string, existOnErr bool) (result int, err error) {
 	err = Get(key, existOnErr, func(res interface{}) (err error) {
 		if _, ok := res.(string); !ok {
@@ -272,21 +289,23 @@ func GetMillisecond(key string, existOnErr bool) (result int, err error) {
 // GetStringMap
 // 假設 consul 路徑 "/storage/redis" 內有下列資料
 // `
-// 	account = "hugo"
-// 	password = "b"
-// 	[dbname]
-// 	config = 1
-// 	user = 2
+//
+//	account = "hugo"
+//	password = "b"
+//	[dbname]
+//	config = 1
+//	user = 2
+//
 // `
 //
 // 如果要取得 dbname 的 map[string]string，可以使用 GetStringMap 方法，傳入參數為 GetStringMap("/storage/redis/dbname)
 // return:
 // `
-// map[string]string{
-// 	"config": 1,
-// 	"user": 2,
-// }
 //
+//	map[string]string{
+//		"config": 1,
+//		"user": 2,
+//	}
 func GetStringMap(key string, existOnErr bool) (result map[string]string, err error) {
 	err = Get(key, existOnErr, func(res interface{}) (err error) {
 		result = cast.ToStringMapString(res)
@@ -302,23 +321,25 @@ func GetStringMap(key string, existOnErr bool) (result map[string]string, err er
 // =======================================
 // 假設 consul 路徑 "/storage/mongo" 內有下列資料
 // `
-// 	account = "hugo"
-// 	password = "b"
-// 	[dbname]
-// 	config = 1
-// 	user = 2
+//
+//	account = "hugo"
+//	password = "b"
+//	[dbname]
+//	config = 1
+//	user = 2
+//
 // `
 //
 // 使用 GetStringMap 方法，傳入參數為 GetStringMap("/storage/mongo)
 // return:
 // `
-// map[string]string{
-// 	"account": "hugo",
-// 	"password": "b",
-//  "dbname.config": "1",
-//  "dbname.user": "2",
-// }
 //
+//	map[string]string{
+//		"account": "hugo",
+//		"password": "b",
+//	 "dbname.config": "1",
+//	 "dbname.user": "2",
+//	}
 func GetFileStringMap(path string, existOnErr bool) (result map[string]string, err error) {
 	defer func() {
 		if err != nil {
