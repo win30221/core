@@ -16,16 +16,16 @@ type Context struct {
 	TraceCode string
 }
 
-func New(c *gin.Context, ctx context.Context) Context {
-	return Context{
+func New(c *gin.Context, ctx context.Context) *Context {
+	return &Context{
 		GinContext: c,
 		Context:    ctx,
 		TraceCode:  c.Request.Header.Get(consts.HeaderXRequestID),
 	}
 }
 
-func NewEmpty() Context {
-	return Context{
+func NewEmpty() *Context {
+	return &Context{
 		GinContext: &gin.Context{},
 		Context:    context.Background(),
 	}
