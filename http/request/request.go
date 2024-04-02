@@ -19,7 +19,7 @@ type Request struct {
 	URL    string
 	Data   string
 	Result interface{}
-	CTX    ctx.Context
+	CTX    *ctx.Context
 	// header
 	Header        http.Header
 	DefaultHeader bool

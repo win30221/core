@@ -66,7 +66,7 @@ func ErrorD(ctx ctx.Context, httpStatusCode int, data interface{}, err error) {
 }
 
 // Error 用在回傳值沒有需要 data 的時候
-func Error(ctx ctx.Context, httpStatusCode int, err error) {
+func Error(ctx *ctx.Context, httpStatusCode int, err error) {
 	customError, ok := catch.CheckCustomError(err)
 	if !ok {
 		ctx.GinContext.JSON(httpStatusCode, Response{
@@ -97,7 +97,7 @@ func Error(ctx ctx.Context, httpStatusCode int, err error) {
 	ctx.GinContext.Error(fmt.Errorf("%s, stack:%s", logMsg, stack))
 }
 
-func OK(ctx ctx.Context, data interface{}) {
+func OK(ctx *ctx.Context, data interface{}) {
 	res := &Response{
 		Data: "Success",
 		Status: Status{
@@ -116,7 +116,7 @@ func OK(ctx ctx.Context, data interface{}) {
 	ctx.GinContext.JSON(http.StatusOK, res)
 }
 
-func BindParameterError(ctx ctx.Context, err error) {
+func BindParameterError(ctx *ctx.Context, err error) {
 	Error(ctx, http.StatusBadRequest, catch.New(
 		syserrno.ValidParameter,
 		fmt.Sprintf("bind parameter error: %v", err),
@@ -124,7 +124,7 @@ func BindParameterError(ctx ctx.Context, err error) {
 	))
 }
 
-func ValidParameterError(ctx ctx.Context, err error) {
+func ValidParameterError(ctx *ctx.Context, err error) {
 	Error(ctx, http.StatusBadRequest, catch.New(
 		syserrno.ValidParameter,
 		fmt.Sprintf("validate parameter error: %v", err),
