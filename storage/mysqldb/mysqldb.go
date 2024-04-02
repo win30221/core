@@ -28,54 +28,54 @@ func buildSQLLog(ctx *gin.Context, query string, args ...any) {
 	}
 }
 
-func QueryRowContext(ctx ctx.Context, db *sql.DB, query string, args ...any) (res *sql.Row) {
+func QueryRowContext(ctx *ctx.Context, db *sql.DB, query string, args ...any) (res *sql.Row) {
 	buildSQLLog(ctx.GinContext, query, args...)
 	res = db.QueryRowContext(ctx.Context, query, args...)
 	return
 }
 
-func QueryContext(ctx ctx.Context, db *sql.DB, query string, args ...any) (res *sql.Rows, err error) {
+func QueryContext(ctx *ctx.Context, db *sql.DB, query string, args ...any) (res *sql.Rows, err error) {
 	buildSQLLog(ctx.GinContext, query, args...)
 	res, err = db.QueryContext(ctx.Context, query, args...)
 	return
 }
 
-func ExecContext(ctx ctx.Context, db *sql.DB, query string, args ...any) (res sql.Result, err error) {
+func ExecContext(ctx *ctx.Context, db *sql.DB, query string, args ...any) (res sql.Result, err error) {
 	buildSQLLog(ctx.GinContext, query, args...)
 	res, err = db.ExecContext(ctx.Context, query, args...)
 	return
 }
 
-func BeginTx(ctx ctx.Context, db *sql.DB) (tx *sql.Tx, err error) {
+func BeginTx(ctx *ctx.Context, db *sql.DB) (tx *sql.Tx, err error) {
 	buildSQLLog(ctx.GinContext, "BEGIN;")
 	tx, err = db.BeginTx(ctx.Context, nil)
 	return
 }
 
-func Commit(ctx ctx.Context, tx *sql.Tx) (err error) {
+func Commit(ctx *ctx.Context, tx *sql.Tx) (err error) {
 	buildSQLLog(ctx.GinContext, "COMMIT;")
 	err = tx.Commit()
 	return
 }
 
-func Rollback(ctx ctx.Context, tx *sql.Tx) {
+func Rollback(ctx *ctx.Context, tx *sql.Tx) {
 	buildSQLLog(ctx.GinContext, "ROLLBACK;")
 	tx.Rollback()
 }
 
-func QueryRowContextTx(ctx ctx.Context, db *sql.Tx, query string, args ...any) (res *sql.Row) {
+func QueryRowContextTx(ctx *ctx.Context, db *sql.Tx, query string, args ...any) (res *sql.Row) {
 	buildSQLLog(ctx.GinContext, query, args...)
 	res = db.QueryRowContext(ctx.Context, query, args...)
 	return
 }
 
-func QueryContextTx(ctx ctx.Context, db *sql.Tx, query string, args ...any) (res *sql.Rows, err error) {
+func QueryContextTx(ctx *ctx.Context, db *sql.Tx, query string, args ...any) (res *sql.Rows, err error) {
 	buildSQLLog(ctx.GinContext, query, args...)
 	res, err = db.QueryContext(ctx.Context, query, args...)
 	return
 }
 
-func ExecContextTx(ctx ctx.Context, db *sql.Tx, query string, args ...any) (res sql.Result, err error) {
+func ExecContextTx(ctx *ctx.Context, db *sql.Tx, query string, args ...any) (res sql.Result, err error) {
 	buildSQLLog(ctx.GinContext, query, args...)
 	res, err = db.ExecContext(ctx.Context, query, args...)
 	return
