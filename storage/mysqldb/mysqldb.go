@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/win30221/core/http/ctx"
@@ -13,9 +14,11 @@ import (
 func buildSQLLog(ctx *gin.Context, query string, args ...any) {
 	res := query
 	for _, arg := range args {
-		switch arg.(type) {
+		switch v := arg.(type) {
 		case string:
-			res = strings.Replace(res, "?", fmt.Sprintf("'%v'", arg), 1)
+			res = strings.Replace(res, "?", fmt.Sprintf("'%s'", v), 1)
+		case time.Time:
+			res = strings.Replace(res, "?", fmt.Sprintf("'%s'", v.Format("2006-01-02 15:04:05")), 1)
 		default:
 			res = strings.Replace(res, "?", fmt.Sprintf("%v", arg), 1)
 		}
