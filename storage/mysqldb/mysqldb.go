@@ -23,9 +23,12 @@ func buildSQLLog(ctx *gin.Context, query string, args ...any) {
 			res = strings.Replace(res, "?", fmt.Sprintf("%v", arg), 1)
 		}
 	}
-	if logs, exists := ctx.Get(middleware.SQLLogs); exists {
-		ctx.Set(middleware.SQLLogs, append(logs.([]string), res))
+	logs, exists := ctx.Get(middleware.SQLLogs)
+	if !exists {
+		ctx.Set(middleware.SQLLogs, []string{})
+		logs, _ = ctx.Get(middleware.SQLLogs)
 	}
+	ctx.Set(middleware.SQLLogs, append(logs.([]string), res))
 }
 
 func QueryRowContext(ctx *ctx.Context, db *sql.DB, query string, args ...any) (res *sql.Row) {
