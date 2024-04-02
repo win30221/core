@@ -27,6 +27,9 @@ func GET(pool *redigo.Pool, ctx context.Context, key string, result interface{})
 	defer conn.Close()
 
 	b, err := redigo.Bytes(conn.Do("GET", key))
+	if err == redis.ErrNil {
+		return
+	}
 	if err != nil {
 		err = catch.NewWitStack(syserrno.Redis, "get data error", fmt.Sprintf("execute GET command error. err: %s", err.Error()), 3)
 		return
