@@ -124,6 +124,30 @@ func PATCH(r *Request) (err error) {
 	return exec(req, r)
 }
 
+func DELETE(r *Request) (err error) {
+	req, err := http.NewRequest("DELETE", r.URL, strings.NewReader(r.Data))
+	if err != nil {
+		err = catch.New(syserrno.HTTP, "new request error", fmt.Sprintf("new request error: %s", err.Error()))
+		return
+	}
+
+	if r.Header != nil {
+		req.Header = r.Header
+	}
+
+	if r.DefaultHeader {
+		req.Header.Add(consts.HeaderSysToken, basic.SysToken)
+		req.Header.Add(consts.HeaderXRequestID, r.CTX.TraceCode)
+		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	}
+
+	if r.CTX.Context != nil {
+		req = req.WithContext(r.CTX.Context)
+	}
+
+	return exec(req, r)
+}
+
 func exec(req *http.Request, r *Request) (err error) {
 	client := &http.Client{}
 
