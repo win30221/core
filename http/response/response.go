@@ -26,7 +26,7 @@ type Response struct {
 }
 
 // Error 用在回傳值需要 data 的時候
-func ErrorD(ctx ctx.Context, httpStatusCode int, data interface{}, err error) {
+func ErrorD(c *ctx.Context, httpStatusCode int, data interface{}, err error) {
 	var d interface{}
 
 	if data != nil {
@@ -35,97 +35,97 @@ func ErrorD(ctx ctx.Context, httpStatusCode int, data interface{}, err error) {
 
 	customError, ok := catch.CheckCustomError(err)
 	if !ok {
-		ctx.GinContext.JSON(httpStatusCode, Response{
+		c.GinContext.JSON(httpStatusCode, Response{
 			Data: d,
 			Status: Status{
 				Code:      syserrno.Undefined,
 				Message:   err.Error(),
-				TraceCode: ctx.TraceCode,
+				TraceCode: c.TraceCode,
 				DateTime:  time.Now().In(basic.TimeZone).Format(time.RFC3339),
 			},
 		})
 
-		ctx.GinContext.Error(errors.New(err.Error()))
+		c.GinContext.Error(errors.New(err.Error()))
 
 		return
 	}
 
 	code, outputMsg, logMsg, stack := customError.Info()
 
-	ctx.GinContext.JSON(httpStatusCode, Response{
+	c.GinContext.JSON(httpStatusCode, Response{
 		Data: d,
 		Status: Status{
 			Code:      code,
-			TraceCode: ctx.TraceCode,
+			TraceCode: c.TraceCode,
 			Message:   outputMsg,
 			DateTime:  time.Now().In(basic.TimeZone).Format(time.RFC3339),
 		},
 	})
 
-	ctx.GinContext.Error(fmt.Errorf("%s, stack:%s", logMsg, stack))
+	c.GinContext.Error(fmt.Errorf("%s, stack:%s", logMsg, stack))
 }
 
 // Error 用在回傳值沒有需要 data 的時候
-func Error(ctx *ctx.Context, httpStatusCode int, err error) {
+func Error(c *ctx.Context, httpStatusCode int, err error) {
 	customError, ok := catch.CheckCustomError(err)
 	if !ok {
-		ctx.GinContext.JSON(httpStatusCode, Response{
+		c.GinContext.JSON(httpStatusCode, Response{
 			Status: Status{
 				Code:      syserrno.Undefined,
 				Message:   err.Error(),
-				TraceCode: ctx.TraceCode,
+				TraceCode: c.TraceCode,
 				DateTime:  time.Now().In(basic.TimeZone).Format(time.RFC3339),
 			},
 		})
 
-		ctx.GinContext.Error(errors.New(err.Error()))
+		c.GinContext.Error(errors.New(err.Error()))
 
 		return
 	}
 
 	code, outputMsg, logMsg, stack := customError.Info()
 
-	ctx.GinContext.JSON(httpStatusCode, Response{
+	c.GinContext.JSON(httpStatusCode, Response{
 		Status: Status{
 			Code:      code,
-			TraceCode: ctx.TraceCode,
+			TraceCode: c.TraceCode,
 			Message:   outputMsg,
 			DateTime:  time.Now().In(basic.TimeZone).Format(time.RFC3339),
 		},
 	})
 
-	ctx.GinContext.Error(fmt.Errorf("%s, stack:%s", logMsg, stack))
+	c.GinContext.Error(fmt.Errorf("%s, stack:%s", logMsg, stack))
 }
 
-func OK(ctx *ctx.Context, data interface{}) {
+func OK(c *ctx.Context, data interface{}) {
 	res := &Response{
 		Data: "Success",
 		Status: Status{
 			Code:      syserrno.OK,
 			Message:   "Success",
-			TraceCode: ctx.TraceCode,
+			TraceCode: c.TraceCode,
 			DateTime:  time.Now().In(basic.TimeZone).Format(time.RFC3339),
 		},
 	}
 
 	if data != nil {
 		res.Data = data
-		ctx.GinContext.Set("result", data)
+		c.GinContext.Set("result", data)
 	}
 
-	ctx.GinContext.JSON(http.StatusOK, res)
+	c.GinContext.JSON(http.StatusOK, res)
 }
 
-func BindParameterError(ctx *ctx.Context, err error) {
-	Error(ctx, http.StatusBadRequest, catch.New(
+func BindParameterError(c *ctx.Context, err error) {
+	Error(c, http.StatusBadRequest, catch.New(
 		syserrno.ValidParameter,
 		fmt.Sprintf("bind parameter error: %v", err),
 		err.Error(),
 	))
 }
 
-func ValidParameterError(ctx *ctx.Context, err error) {
-	Error(ctx, http.StatusBadRequest, catch.New(
+func ValidParameterError(c *ctx.Context, err error) {
+	Error(c, http.StatusBadRequest, catch.New(
 		syserrno.ValidParameter,
 		fmt.Sprintf("validate parameter error: %v", err),
 		err.Error(),

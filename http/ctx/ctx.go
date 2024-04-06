@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/win30221/core/http/consts"
+	"github.com/win30221/core/utils"
 )
 
 // 如果是在 rmq 或 cron-job 中使用，就不會有 gin 的 context，因此直接使用 Context 的 struct 來建立 ctx
@@ -28,5 +29,6 @@ func NewEmpty() *Context {
 	return &Context{
 		GinContext: &gin.Context{},
 		Context:    context.Background(),
+		TraceCode:  utils.GenerateRequestID(),
 	}
 }
