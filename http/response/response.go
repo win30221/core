@@ -21,13 +21,13 @@ type Status struct {
 }
 
 type Response struct {
-	Data   interface{} `json:"data"`
+	Data   any `json:"data"`
 	Status `json:"status"`
 }
 
 // Error 用在回傳值需要 data 的時候
-func ErrorD(c *ctx.Context, httpStatusCode int, data interface{}, err error) {
-	var d interface{}
+func ErrorD(c *ctx.Context, httpStatusCode int, data any, err error) {
+	var d any
 
 	if data != nil {
 		d = data
@@ -97,7 +97,7 @@ func Error(c *ctx.Context, httpStatusCode int, err error) {
 	c.GinContext.Error(fmt.Errorf("%s, stack:%s", logMsg, stack))
 }
 
-func OK(c *ctx.Context, data interface{}) {
+func OK(c *ctx.Context, data any) {
 	res := &Response{
 		Data: "Success",
 		Status: Status{

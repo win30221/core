@@ -1,15 +1,16 @@
 package storage
 
 import (
+	"context"
 	"log"
 	"time"
 
-	redigo "github.com/gomodule/redigo/redis"
+	"github.com/redis/go-redis/v9"
 	"github.com/spf13/cast"
 	"github.com/win30221/core/config"
 )
 
-func GetRedis(path, dbName string) (rdb *redigo.Pool) {
+func GetRedis(path, dbName string) (rdb *redis.Client) {
 	var err error
 
 	defer func() {
@@ -45,39 +46,46 @@ func GetRedis(path, dbName string) (rdb *redigo.Pool) {
 
 	db, _ := config.GetInt(path+"/dbname."+dbName, false)
 
-	rdb = &redigo.Pool{
-		MaxIdle:     maxIdle,
-		MaxActive:   maxActive,
-		Wait:        true,
-		IdleTimeout: idleTimeout,
-		Dial: func() (conn redigo.Conn, err error) {
-			conn, err = redigo.Dial("tcp", host)
-			if err != nil {
-				return
-			}
+	rdb = redis.NewClient(&redis.Options{
+		Addr:         host,
+		Password:     password,
+		DB:           db,
+		MaxIdleConns: maxIdle,
+	})
 
-			if password != "" {
-				_, err = conn.Do("AUTH", password)
-				if err != nil {
-					return
-				}
-			}
+	// rdb = &redigo.Pool{
+	// 	MaxIdle:     maxIdle,
+	// 	MaxActive:   maxActive,
+	// 	Wait:        true,
+	// 	IdleTimeout: idleTimeout,
+	// 	Dial: func() (conn redigo.Conn, err error) {
+	// 		conn, err = redigo.Dial("tcp", host)
+	// 		if err != nil {
+	// 			return
+	// 		}
 
-			_, err = conn.Do("SELECT", db)
-			if err != nil {
-				conn.Close()
-				return
-			}
+	// 		if password != "" {
+	// 			_, err = conn.Do("AUTH", password)
+	// 			if err != nil {
+	// 				return
+	// 			}
+	// 		}
 
-			return
-		},
-		TestOnBorrow: func(c redigo.Conn, t time.Time) (err error) {
-			_, err = c.Do("PING")
-			return
-		},
-	}
+	// 		_, err = conn.Do("SELECT", db)
+	// 		if err != nil {
+	// 			conn.Close()
+	// 			return
+	// 		}
 
-	_, err = rdb.Get().Do("PING")
+	// 		return
+	// 	},
+	// 	TestOnBorrow: func(c redigo.Conn, t time.Time) (err error) {
+	// 		_, err = c.Do("PING")
+	// 		return
+	// 	},
+	// }
+
+	_, err = rdb.Ping(context.Background()).Result()
 
 	log.Printf("Redis connected to `%+v`, selected db to `%+v` success", host, db)
 

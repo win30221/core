@@ -18,7 +18,7 @@ var json = jsoniter.ConfigCompatibleWithStandardLibrary
 type Request struct {
 	URL    string
 	Data   string
-	Result interface{}
+	Result any
 	CTX    *ctx.Context
 	// header
 	Header        http.Header

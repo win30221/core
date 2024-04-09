@@ -53,7 +53,7 @@ func Load(newIP string) {
 	log.Println("Consul IP: " + ip)
 }
 
-func Get(key string, existOnErr bool, convert func(interface{}) error) (err error) {
+func Get(key string, existOnErr bool, convert func(any) error) (err error) {
 	defer func() {
 		if err != nil {
 			if existOnErr {
@@ -117,7 +117,7 @@ func Get(key string, existOnErr bool, convert func(interface{}) error) (err erro
 // 使用 GetStringMap("/storage/redis/account)
 // return: "hugo"
 func GetString(key string, existOnErr bool) (result string, err error) {
-	err = Get(key, existOnErr, func(res interface{}) (err error) {
+	err = Get(key, existOnErr, func(res any) (err error) {
 		if _, ok := res.(string); !ok {
 			err = ErrOnTypeIncorrect
 			return
@@ -129,7 +129,7 @@ func GetString(key string, existOnErr bool) (result string, err error) {
 }
 
 func GetInt(key string, existOnErr bool) (result int, err error) {
-	err = Get(key, existOnErr, func(res interface{}) (err error) {
+	err = Get(key, existOnErr, func(res any) (err error) {
 		if _, ok := res.(int64); !ok {
 			err = ErrOnTypeIncorrect
 			return
@@ -141,7 +141,7 @@ func GetInt(key string, existOnErr bool) (result int, err error) {
 }
 
 func GetInt64(key string, existOnErr bool) (result int64, err error) {
-	err = Get(key, existOnErr, func(res interface{}) (err error) {
+	err = Get(key, existOnErr, func(res any) (err error) {
 		if _, ok := res.(int64); !ok {
 			err = ErrOnTypeIncorrect
 			return
@@ -153,7 +153,7 @@ func GetInt64(key string, existOnErr bool) (result int64, err error) {
 }
 
 func GetFloat64(key string, existOnErr bool) (result float64, err error) {
-	err = Get(key, existOnErr, func(res interface{}) (err error) {
+	err = Get(key, existOnErr, func(res any) (err error) {
 		if _, ok := res.(float64); !ok {
 			err = ErrOnTypeIncorrect
 			return
@@ -165,7 +165,7 @@ func GetFloat64(key string, existOnErr bool) (result float64, err error) {
 }
 
 func GetBool(key string, existOnErr bool) (result bool, err error) {
-	err = Get(key, existOnErr, func(res interface{}) (err error) {
+	err = Get(key, existOnErr, func(res any) (err error) {
 		if _, ok := res.(bool); !ok {
 			err = ErrOnTypeIncorrect
 			return
@@ -188,8 +188,8 @@ func GetBool(key string, existOnErr bool) (result bool, err error) {
 // GetStringSlice("/storage/redis/host")
 // return: []string{"127.0.0.1:8080", "127.0.0.1:8081", "127.0.0.1:8082"}
 func GetStringSlice(key string, existOnErr bool) (result []string, err error) {
-	err = Get(key, existOnErr, func(res interface{}) (err error) {
-		if _, ok := res.([]interface{}); !ok {
+	err = Get(key, existOnErr, func(res any) (err error) {
+		if _, ok := res.([]any); !ok {
 			err = ErrOnTypeIncorrect
 			return
 		}
@@ -210,7 +210,7 @@ func GetStringSlice(key string, existOnErr bool) (result []string, err error) {
 // GetDuration("/storage/redis/user_ttl")
 // return: time.Duration("60s")
 func GetDuration(key string, existOnErr bool) (result time.Duration, err error) {
-	err = Get(key, existOnErr, func(res interface{}) (err error) {
+	err = Get(key, existOnErr, func(res any) (err error) {
 		if _, ok := res.(string); !ok {
 			err = ErrOnTypeIncorrect
 			return
@@ -235,7 +235,7 @@ func GetDuration(key string, existOnErr bool) (result time.Duration, err error) 
 // GetSeconds("/storage/redis/user_ttl")
 // return: 120
 func GetSeconds(key string, existOnErr bool) (result int, err error) {
-	err = Get(key, existOnErr, func(res interface{}) (err error) {
+	err = Get(key, existOnErr, func(res any) (err error) {
 		if _, ok := res.(string); !ok {
 			err = ErrOnTypeIncorrect
 			return
@@ -266,7 +266,7 @@ func GetSeconds(key string, existOnErr bool) (result int, err error) {
 // GetSeconds("/storage/redis/user_ttl")
 // return: 1000
 func GetMillisecond(key string, existOnErr bool) (result int, err error) {
-	err = Get(key, existOnErr, func(res interface{}) (err error) {
+	err = Get(key, existOnErr, func(res any) (err error) {
 		if _, ok := res.(string); !ok {
 			err = ErrOnTypeIncorrect
 			return
@@ -307,7 +307,7 @@ func GetMillisecond(key string, existOnErr bool) (result int, err error) {
 //		"user": 2,
 //	}
 func GetStringMap(key string, existOnErr bool) (result map[string]string, err error) {
-	err = Get(key, existOnErr, func(res interface{}) (err error) {
+	err = Get(key, existOnErr, func(res any) (err error) {
 		result = cast.ToStringMapString(res)
 		return
 	})
@@ -362,7 +362,7 @@ func GetFileStringMap(path string, existOnErr bool) (result map[string]string, e
 		return
 	}
 
-	x := map[string]interface{}{}
+	x := map[string]any{}
 
 	allKeys := vObj.AllKeys()
 	for _, key := range allKeys {

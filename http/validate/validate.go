@@ -6,6 +6,6 @@ import "github.com/go-playground/validator/v10"
 var Validate = validator.New()
 
 // delivery 在 c.ShouldBind() 之後使用 Validate.Struct() 來驗證傳入參數
-func Struct(s interface{}) error {
+func Struct(s any) error {
 	return Validate.Struct(s)
 }

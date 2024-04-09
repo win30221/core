@@ -30,7 +30,7 @@ var (
 //
 // // m = &map[expireAt:1641516571365]
 // fmt.Println(m)
-func ToDoc(v interface{}) (doc *bson.M, err error) {
+func ToDoc(v any) (doc *bson.M, err error) {
 	data, err := bson.Marshal(v)
 	if err != nil {
 		err = catch.NewWitStack(syserrno.Mongo, "marshal bson error", fmt.Sprintf("marshal bson error. err: %s", err.Error()), 3)

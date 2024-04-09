@@ -10,7 +10,7 @@ import (
 func Version(c *gin.Context) {
 	ctx := ctx.New(c, c.Request.Context())
 
-	response.OK(ctx, map[string]interface{}{
+	response.OK(ctx, map[string]any{
 		"Server":    basic.ServerName,
 		"Host":      basic.Host,
 		"Port":      basic.Port,
