@@ -22,6 +22,12 @@ func Init(serverName string) {
 		LogMode, _ = config.GetString("/system/log_mode", true)
 	}
 
+	printDetail, err := config.GetBool(fmt.Sprintf("/service/%s/print_detail", ServerName), false)
+	if err != nil {
+		printDetail, _ = config.GetBool("/system/print_detail", true)
+	}
+	PrintDetail = printDetail
+
 	RequestLatencyThrottle, _ = config.GetMillisecond("/system/request_latency_throttle", true)
 
 	// 設定 Log

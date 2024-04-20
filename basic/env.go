@@ -20,7 +20,8 @@ var (
 	TimeZone   *time.Location
 	ServerName string
 	// LogMode 允許參數 debug, info, warn, error, dpanic, panic, fatal
-	LogMode string
+	LogMode     string
+	PrintDetail bool
 
 	// Alert
 	// RequestLatencyThrottle 如果請求時長大於 RequestLatencyThrottle 時需要印出 warn
