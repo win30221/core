@@ -3,7 +3,10 @@ package request
 import (
 	"fmt"
 	"net/http"
+	"net/url"
+	"reflect"
 	"strings"
+	"time"
 
 	jsoniter "github.com/json-iterator/go"
 	"github.com/win30221/core/basic"
@@ -23,6 +26,55 @@ type Request struct {
 	// header
 	Header        http.Header
 	DefaultHeader bool
+}
+
+func StructToURLQueryString(data interface{}) (res string) {
+	values := url.Values{}
+
+	val := reflect.ValueOf(data)
+	typ := reflect.TypeOf(data)
+
+	// 阻擋傳入非 struct 的型別
+	if val.Kind() != reflect.Struct {
+		return
+	}
+
+	for i := 0; i < val.NumField(); i++ {
+		field := val.Field(i)
+		structField := typ.Field(i)
+		tag := structField.Tag.Get("sendForm")
+		if tag == "-" || tag == "" || field.IsZero() || !field.CanInterface() {
+			continue
+		}
+
+		// 處理空值
+		if field.Kind() == reflect.Ptr {
+			if field.IsNil() {
+				continue
+			}
+			field = field.Elem()
+		}
+
+		// 處理 time.Time 格式
+		if field.Type() == reflect.TypeOf(time.Time{}) {
+			values.Add(tag, field.Interface().(time.Time).Format(time.RFC3339))
+			continue
+		}
+
+		// 處理 slice
+		if field.Kind() == reflect.Slice {
+			for j := 0; j < field.Len(); j++ {
+				values.Add(tag, fmt.Sprintf("%v", field.Index(j).Interface()))
+			}
+			continue
+		}
+
+		values.Add(tag, fmt.Sprintf("%v", field.Interface()))
+	}
+
+	res = values.Encode()
+
+	return
 }
 
 func GET(r *Request) (err error) {

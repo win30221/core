@@ -83,6 +83,14 @@ func CheckCustomError(err error) (e customError, ok bool) {
 	return
 }
 
+// 抓取是否有相同的錯誤代碼
+func CheckSpecificCode(err error, code string) bool {
+	if customErr, ok := err.(customError); ok {
+		return customErr.Code == code
+	}
+	return false
+}
+
 // ReplaceOutPutMsg 用在 gateway 的 repository 錯誤出現不同錯誤碼時會需要替換回傳的錯誤訊息
 func ReplaceOutPutMsg(err error, msg string) error {
 	e, ok := CheckCustomError(err)
