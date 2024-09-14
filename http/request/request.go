@@ -42,7 +42,7 @@ func StructToURLQueryString(data interface{}) (res string) {
 	for i := 0; i < val.NumField(); i++ {
 		field := val.Field(i)
 		structField := typ.Field(i)
-		tag := structField.Tag.Get("sendForm")
+		tag := structField.Tag.Get("form")
 		if tag == "-" || tag == "" || field.IsZero() || !field.CanInterface() {
 			continue
 		}
