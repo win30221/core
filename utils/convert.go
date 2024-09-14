@@ -20,3 +20,10 @@ func Uint64ToAny(data []uint64) (res []any) {
 	}
 	return
 }
+
+func StringToAny(data []string) (res []any) {
+	for _, d := range data {
+		res = append(res, d)
+	}
+	return
+}
