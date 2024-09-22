@@ -23,18 +23,16 @@ func GetS3(path string) (s *s3.Storage) {
 	endpoint, _ := config.GetString(path+"/endpoint", true)
 	acl, _ := config.GetString(path+"/acl", true)
 	rootSubset, _ := config.GetString(path+"/root_subset", true)
-	cdnURL, _ := config.GetString(path+"/cdn_url", true)
 
 	s, err = s3.New(s3.Config{
-		Bucket:          bucket,
-		Region:          region,
 		AccessKeyID:     accessKeyID,
 		SecretAccessKey: secretAccessKey,
+		Bucket:          bucket,
+		Region:          region,
 		Endpoint:        endpoint,
 		ACL:             acl,
 
 		RootSubset: rootSubset,
-		CdnURL:     cdnURL,
 	})
 
 	return
