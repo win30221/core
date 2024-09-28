@@ -130,7 +130,7 @@ func GetString(key string, existOnErr bool) (result string, err error) {
 
 func GetInt(key string, existOnErr bool) (result int, err error) {
 	err = Get(key, existOnErr, func(res any) (err error) {
-		if _, ok := res.(int); !ok {
+		if _, ok := res.(int64); !ok {
 			err = ErrOnTypeIncorrect
 			return
 		}
