@@ -154,7 +154,7 @@ func GetInt64(key string, existOnErr bool) (result int64, err error) {
 
 func GetUint64(key string, existOnErr bool) (result uint64, err error) {
 	err = Get(key, existOnErr, func(res any) (err error) {
-		if _, ok := res.(uint64); !ok {
+		if _, ok := res.(int64); !ok {
 			err = ErrOnTypeIncorrect
 			return
 		}
