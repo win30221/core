@@ -22,6 +22,7 @@ func GetS3(path string) (s *s3.Storage) {
 	region, _ := config.GetString(path+"/region", true)
 	endpointVersion, _ := config.GetInt(path+"/endpoint_version", true)
 	endpoint, _ := config.GetString(path+"/endpoint", true)
+	publicUrl, _ := config.GetString(path+"/public_url", true)
 	acl, _ := config.GetString(path+"/acl", true)
 	rootSubset, _ := config.GetString(path+"/root_subset", true)
 
@@ -32,6 +33,7 @@ func GetS3(path string) (s *s3.Storage) {
 		Region:          region,
 		EndPointVersion: endpointVersion,
 		Endpoint:        endpoint,
+		PublicUrl:       publicUrl,
 		ACL:             acl,
 
 		RootSubset: rootSubset,

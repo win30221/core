@@ -9,7 +9,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/credentials"
-	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go-v2/service/s3/types"
 	smithyendpoints "github.com/aws/smithy-go/endpoints"
@@ -26,6 +25,7 @@ type Config struct {
 	Region          string
 	EndPointVersion int
 	Endpoint        string
+	PublicUrl       string
 	ACL             string
 
 	// RootSubset 將 bucket 底下資源區隔為 dev, prd。(dev, qa, sit, pt 等站點 root_folder 都用 dev)
@@ -33,9 +33,8 @@ type Config struct {
 }
 
 type Storage struct {
-	client   *s3.Client
-	uploader *manager.Uploader
-	conf     Config
+	client *s3.Client
+	conf   Config
 }
 
 type resolverV2 struct {
@@ -76,12 +75,9 @@ func New(conf Config) (s *Storage, err error) {
 		})
 	}
 
-	uploader := manager.NewUploader(client)
-
 	s = &Storage{
-		client:   client,
-		uploader: uploader,
-		conf:     conf,
+		client: client,
+		conf:   conf,
 	}
 
 	return
@@ -94,7 +90,7 @@ func (s *Storage) UploadImage(ctx context.Context, dirPath, filename, contentTyp
 	// - Wrong: "/dev/image/test.png"
 	filePath := fmt.Sprintf("%s/%s/%s", s.conf.RootSubset, dirPath, filename)
 
-	_, err = s.uploader.Upload(
+	_, err = s.client.PutObject(
 		ctx,
 		&s3.PutObjectInput{
 			Bucket:      aws.String(s.conf.Bucket),
@@ -109,7 +105,7 @@ func (s *Storage) UploadImage(ctx context.Context, dirPath, filename, contentTyp
 		return
 	}
 
-	imageURL = s.conf.Endpoint + "/" + filePath
+	imageURL = s.conf.PublicUrl + "/" + filePath
 
 	return
 }
