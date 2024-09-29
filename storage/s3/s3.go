@@ -23,9 +23,10 @@ type Config struct {
 	// Bucket 可以在 `https://s3.console.aws.amazon.com/s3/home` 登入後找到
 	Bucket string
 	// Region 可用的地區請參考 https://docs.aws.amazon.com/directoryservice/latest/admin-guide/regions.html
-	Region   string
-	Endpoint string
-	ACL      string
+	Region          string
+	EndPointVersion int
+	Endpoint        string
+	ACL             string
 
 	// RootSubset 將 bucket 底下資源區隔為 dev, prd。(dev, qa, sit, pt 等站點 root_folder 都用 dev)
 	RootSubset string
@@ -63,9 +64,17 @@ func New(conf Config) (s *Storage, err error) {
 		return
 	}
 
-	client := s3.NewFromConfig(cfg, func(o *s3.Options) {
-		o.EndpointResolverV2 = &resolverV2{conf.Endpoint}
-	})
+	var client *s3.Client
+	switch conf.EndPointVersion {
+	case 1: // cloudflare
+		client = s3.NewFromConfig(cfg, func(o *s3.Options) {
+			o.BaseEndpoint = aws.String(conf.Endpoint)
+		})
+	case 2: // linode
+		client = s3.NewFromConfig(cfg, func(o *s3.Options) {
+			o.EndpointResolverV2 = &resolverV2{conf.Endpoint}
+		})
+	}
 
 	uploader := manager.NewUploader(client)
 
