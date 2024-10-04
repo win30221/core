@@ -1,7 +1,7 @@
 package consts
 
 const (
-	HeaderXRequestID = "X-Request-ID"
+	HeaderXRequestId = "X-Request-Id"
 	// middleware 用
 	HeaderSysToken      = "SysToken"
 	HeaderAuthorization = "Authorization"

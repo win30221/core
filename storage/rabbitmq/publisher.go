@@ -22,7 +22,7 @@ func (c *Connection) Publish(m Message) error {
 	p := amqp.Publishing{
 		Headers:       amqp.Table{"type": m.Body.Type},
 		ContentType:   m.ContentType,
-		CorrelationId: m.CorrelationID,
+		CorrelationId: m.CorrelationId,
 		Body:          m.Body.Data,
 		ReplyTo:       m.ReplyTo,
 	}

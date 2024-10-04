@@ -21,7 +21,7 @@ func New(c *gin.Context, ctx context.Context) *Context {
 	return &Context{
 		GinContext: c,
 		Context:    ctx,
-		TraceCode:  c.Request.Header.Get(consts.HeaderXRequestID),
+		TraceCode:  c.Request.Header.Get(consts.HeaderXRequestId),
 	}
 }
 
@@ -29,6 +29,6 @@ func NewEmpty() *Context {
 	return &Context{
 		GinContext: &gin.Context{},
 		Context:    context.Background(),
-		TraceCode:  utils.GenerateRequestID(),
+		TraceCode:  utils.GenerateRequestId(),
 	}
 }

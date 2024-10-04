@@ -9,23 +9,23 @@ import (
 	"github.com/streadway/amqp"
 )
 
-//MessageBody is the struct for the body passed in the AMQP message. The type will be set on the Request header
+// MessageBody is the struct for the body passed in the AMQP message. The type will be set on the Request header
 type MessageBody struct {
 	Data []byte
 	Type string
 }
 
-//Message is the amqp request to publish
+// Message is the amqp request to publish
 type Message struct {
 	Queue         string
 	ReplyTo       string
 	ContentType   string
-	CorrelationID string
+	CorrelationId string
 	Priority      uint8
 	Body          MessageBody
 }
 
-//Connection is the connection created
+// Connection is the connection created
 type Connection struct {
 	cfg          amqp.URI
 	conn         *amqp.Connection
@@ -38,7 +38,7 @@ type Connection struct {
 	err          chan error
 }
 
-//NewConnection returns the new connection object
+// NewConnection returns the new connection object
 func NewConnection(cfg amqp.URI, exchange, exchangeType, queue string, qos int) *Connection {
 	c := &Connection{
 		cfg:          cfg,
@@ -105,7 +105,7 @@ func (c *Connection) BindQueue() error {
 	return nil
 }
 
-//Reconnect reconnects the connection
+// Reconnect reconnects the connection
 func (c *Connection) Reconnect() error {
 	if err := c.connect(); err != nil {
 		return err

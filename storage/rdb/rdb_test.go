@@ -103,7 +103,7 @@ func Test_Lock(t *testing.T) {
 	rdb := storage.GetRedis("/storage/redis/auction-master", "workers")
 
 	c := ctx.NewEmpty()
-	key := utils.GenerateRequestID()
+	key := utils.GenerateRequestId()
 
 	err := Lock(c, rdb, key, time.Second)
 	if err != nil {

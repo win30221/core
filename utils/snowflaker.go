@@ -15,7 +15,7 @@ var (
 )
 
 // snowflaker
-func GenerateRequestID() string {
+func GenerateRequestId() string {
 	/*
 		Unix timestamp_PID_seq		1545112028_12345_12345
 									15451120281234512345

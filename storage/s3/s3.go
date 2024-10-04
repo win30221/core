@@ -17,7 +17,7 @@ import (
 )
 
 type Config struct {
-	AccessKeyID     string
+	AccessKeyId     string
 	SecretAccessKey string
 	// Bucket 可以在 `https://s3.console.aws.amazon.com/s3/home` 登入後找到
 	Bucket string
@@ -57,7 +57,7 @@ func New(conf Config) (s *Storage, err error) {
 	cfg, err := config.LoadDefaultConfig(
 		context.TODO(),
 		config.WithRegion(conf.Region),
-		config.WithCredentialsProvider(credentials.NewStaticCredentialsProvider(conf.AccessKeyID, conf.SecretAccessKey, "")),
+		config.WithCredentialsProvider(credentials.NewStaticCredentialsProvider(conf.AccessKeyId, conf.SecretAccessKey, "")),
 	)
 	if err != nil {
 		return

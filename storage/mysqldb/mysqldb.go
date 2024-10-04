@@ -145,8 +145,8 @@ func GetInsertFields(data any) (columns []string, placeholders []string, args []
 		field := val.Field(i)     // 取得欄位的反射值物件
 		fieldType := typ.Field(i) // 取得當前欄位的類型資訊
 
-		// 如果當前欄位是 ID 或者為 nil（對於指針類型），則跳過不處理
-		if fieldType.Name == "ID" || (field.Kind() == reflect.Ptr && field.IsNil()) {
+		// 如果當前欄位是 Id 或者為 nil（對於指針類型），則跳過不處理
+		if fieldType.Name == "Id" || (field.Kind() == reflect.Ptr && field.IsNil()) {
 			continue
 		}
 
@@ -169,8 +169,8 @@ func GetNonNullFields(data any) (res []string, args []any) {
 		field := val.Field(i)     // 取得欄位的反射值物件
 		fieldType := typ.Field(i) // 取得當前欄位的類型資訊
 
-		// 如果當前欄位是 ID 或者為 nil（對於指針類型），則跳過不處理
-		if fieldType.Name == "ID" {
+		// 如果當前欄位是 Id 或者為 nil（對於指針類型），則跳過不處理
+		if fieldType.Name == "Id" {
 			continue
 		}
 

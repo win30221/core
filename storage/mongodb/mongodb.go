@@ -19,7 +19,7 @@ var (
 // example:
 //
 //	type Sample struct {
-//			ID       string    `bson:"-"`
+//			Id       string    `bson:"-"`
 //			Title    string    `bson:"title,omitempty"`
 //			ExpireAt time.Time `bson:"expireAt,omitempty"`
 //	}
@@ -53,9 +53,9 @@ func ToDoc(v any) (doc *bson.M, err error) {
 // example:
 //
 // type Shipping struct {
-// 		ID            *primitive.ObjectID `bson:"_id"`
+// 		Id            *primitive.ObjectId `bson:"_id"`
 // 		Type          *uint8              `bson:"type"`
-// 		ItemIDs       *[]int              `bson:"itemIDs"`
+// 		ItemIds       *[]int              `bson:"itemIds"`
 // 		Address       *string             `bson:"address,omitempty"`
 // 		StoreNumber   *string             `bson:"storeNumber,omitempty"`
 // 		StoreName     *string             `bson:"storeName,omitempty"`
@@ -93,7 +93,7 @@ func StructToBSONMap(data interface{}) bson.M {
 		fieldType := typ.Field(i)
 		tag := fieldType.Tag.Get("bson")
 
-		if fieldType.Name == "ID" {
+		if fieldType.Name == "Id" {
 			continue
 		}
 

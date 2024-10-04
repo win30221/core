@@ -18,7 +18,7 @@ const (
 
 func Log() []gin.HandlerFunc {
 	return []gin.HandlerFunc{
-		RequestIDMiddleware,
+		RequestIdMiddleware,
 		ginLogger(),
 	}
 }
@@ -66,7 +66,7 @@ func excludePath(path string) bool {
 // basicFields 記錄一些必要的資訊
 func basicFields(c *gin.Context, reckon time.Time) (res []zap.Field) {
 	res = []zap.Field{
-		zap.String("traceCode", c.Request.Header.Get(consts.HeaderXRequestID)),
+		zap.String("traceCode", c.Request.Header.Get(consts.HeaderXRequestId)),
 		zap.String("method", c.Request.Method),
 		zap.String("uri", c.Request.RequestURI),
 		zap.Int("status", c.Writer.Status()),

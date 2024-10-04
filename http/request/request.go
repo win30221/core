@@ -94,7 +94,7 @@ func GET(r *Request) (err error) {
 
 	if r.DefaultHeader {
 		req.Header.Add(consts.HeaderSysToken, basic.SysToken)
-		req.Header.Add(consts.HeaderXRequestID, r.CTX.TraceCode)
+		req.Header.Add(consts.HeaderXRequestId, r.CTX.TraceCode)
 	}
 
 	if r.CTX.Context != nil {
@@ -117,7 +117,7 @@ func POST(r *Request) (err error) {
 
 	if r.DefaultHeader {
 		req.Header.Add(consts.HeaderSysToken, basic.SysToken)
-		req.Header.Add(consts.HeaderXRequestID, r.CTX.TraceCode)
+		req.Header.Add(consts.HeaderXRequestId, r.CTX.TraceCode)
 		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	}
 
@@ -141,7 +141,7 @@ func PUT(r *Request) (err error) {
 
 	if r.DefaultHeader {
 		req.Header.Add(consts.HeaderSysToken, basic.SysToken)
-		req.Header.Add(consts.HeaderXRequestID, r.CTX.TraceCode)
+		req.Header.Add(consts.HeaderXRequestId, r.CTX.TraceCode)
 		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	}
 
@@ -165,7 +165,7 @@ func PATCH(r *Request) (err error) {
 
 	if r.DefaultHeader {
 		req.Header.Add(consts.HeaderSysToken, basic.SysToken)
-		req.Header.Add(consts.HeaderXRequestID, r.CTX.TraceCode)
+		req.Header.Add(consts.HeaderXRequestId, r.CTX.TraceCode)
 		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	}
 
@@ -189,7 +189,7 @@ func DELETE(r *Request) (err error) {
 
 	if r.DefaultHeader {
 		req.Header.Add(consts.HeaderSysToken, basic.SysToken)
-		req.Header.Add(consts.HeaderXRequestID, r.CTX.TraceCode)
+		req.Header.Add(consts.HeaderXRequestId, r.CTX.TraceCode)
 		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	}
 

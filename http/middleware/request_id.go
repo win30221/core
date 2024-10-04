@@ -6,12 +6,12 @@ import (
 	"github.com/win30221/core/utils"
 )
 
-func RequestIDMiddleware(c *gin.Context) {
+func RequestIdMiddleware(c *gin.Context) {
 	req := c.Request
-	rid := req.Header.Get(consts.HeaderXRequestID)
+	rid := req.Header.Get(consts.HeaderXRequestId)
 	if rid == "" {
-		rid = utils.GenerateRequestID()
+		rid = utils.GenerateRequestId()
 	}
-	req.Header.Set(consts.HeaderXRequestID, rid)
+	req.Header.Set(consts.HeaderXRequestId, rid)
 	c.Next()
 }
